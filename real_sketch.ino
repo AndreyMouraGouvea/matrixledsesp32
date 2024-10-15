@@ -1,4 +1,11 @@
 #include "LedControl.h"
+#include <FastLED.h>
+
+#define DATA_PIN 26
+#define CLOCK_PIN 23
+#define NUM_LEDS 64
+
+CRGB leds[NUM_LEDS];
 
 int ledPIR = 14;
 int value = 0;   
@@ -6,10 +13,10 @@ int value = 0;
 int pirdata = 27;       // pir D is connected to D15
 int pirstate = LOW;  
 
-LedControl lc=LedControl(32,25,23,1);
-unsigned long delaytime=100;
+//LedControl lc=LedControl(32,25,23,1);
+//unsigned long delaytime=100;
 
-void rows() {
+/*void rows() {
   for(int row=0;row<8;row++) {
     delay(delaytime);
     lc.setRow(0,row,B10100000);
@@ -54,7 +61,7 @@ void single() {
     }
   }
 }
-
+*/
 
 void setup() {
   // put your setup code here, to run once:
@@ -62,23 +69,29 @@ void setup() {
   pinMode(ledPIR, OUTPUT);
   //pinMode(ledAzul, OUTPUT);
   pinMode(pirdata, INPUT); 
+  LEDS.addLeds<WS2812,DATA_PIN,RGB>(leds, NUM_LEDS);
+  LEDS.setBrightness(250);
+  Serial.println("brilho: 250");
 
-  lc.shutdown(0,false);
+
+  /*lc.shutdown(0,false);
   /* Set the brightness to a medium values up to 15 */
-  lc.setIntensity(0,5);
+  //lc.setIntensity(0,5);
   /* and clear the display */
-  lc.clearDisplay(0);
+  //lc.clearDisplay(0);
   //ledON();
+  
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   //LED PERNA maior para esquerda - ligacao digital, perna menor = GND
-  presence();
-  Serial.println(pirstate);
-  Serial.println("teste");
-  single();
+  //presence();
+  //Serial.println(pirstate);
+  leds[0] = CRGB::Pink;
+  FastLED.show();
+  //single();
 
   
 
