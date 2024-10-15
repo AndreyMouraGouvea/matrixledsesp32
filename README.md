@@ -9,3 +9,4 @@ espnow => 2 or more (get mac address) => https://youtu.be/xOLG-88Ld3A?si=6_Q9yvU
 
 espnow explained (full) => https://youtu.be/Ydi0M3Xd_vs?si=JSK0l0VKkhrs_jsG
 
+fastled (change colors) => https://youtu.be/kBXYnpznscc?si=iJEXIBfLYLRxzYZ1
