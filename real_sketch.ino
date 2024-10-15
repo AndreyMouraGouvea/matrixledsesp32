@@ -1,22 +1,22 @@
 #include "LedControl.h"
-#include <FastLED.h>
+#include <NewPing.h>
 
-#define DATA_PIN 26
-#define CLOCK_PIN 23
-#define NUM_LEDS 64
+#define TRIGGER_PIN 32
+#define ECHO_PIN 33
+#define MAX_DISTANCE 200 // Maximum distance to measure in centimeters
 
-CRGB leds[NUM_LEDS];
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
-int ledPIR = 14;
+int LED_PIN = 14;
 int value = 0;   
 //int ledAzul = 14;
 int pirdata = 27;       // pir D is connected to D15
 int pirstate = LOW;  
 
-//LedControl lc=LedControl(32,25,23,1);
-//unsigned long delaytime=100;
+LedControl lc=LedControl(32,25,23,1);
+unsigned long delaytime=100;
 
-/*void rows() {
+void rows() {
   for(int row=0;row<8;row++) {
     delay(delaytime);
     lc.setRow(0,row,B10100000);
@@ -61,53 +61,49 @@ void single() {
     }
   }
 }
-*/
+
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  pinMode(ledPIR, OUTPUT);
-  //pinMode(ledAzul, OUTPUT);
-  pinMode(pirdata, INPUT); 
-  LEDS.addLeds<WS2812,DATA_PIN,RGB>(leds, NUM_LEDS);
-  LEDS.setBrightness(250);
-  Serial.println("brilho: 250");
+  pinMode(LED_PIN, OUTPUT);
 
-
-  /*lc.shutdown(0,false);
+  lc.shutdown(0,false);
   /* Set the brightness to a medium values up to 15 */
-  //lc.setIntensity(0,5);
+  lc.setIntensity(0,5);
   /* and clear the display */
-  //lc.clearDisplay(0);
+  lc.clearDisplay(0);
   //ledON();
-  
 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+
   //LED PERNA maior para esquerda - ligacao digital, perna menor = GND
   //presence();
   //Serial.println(pirstate);
-  leds[0] = CRGB::Pink;
-  FastLED.show();
-  //single();
+  single();
+  ledON();
+  //distance();
+  
 
   
 
 }
 
-/*void ledON(){
-  for(int i = 0; i<=1; i++){
-    digitalWrite(ledAmarelo, HIGH);
-    digitalWrite(ledAzul, HIGH);
-    delay(3000);
-    digitalWrite(ledAmarelo, LOW);
-    digitalWrite(ledAzul, LOW);
-    delay(8000);
-    Serial.println("LED'S FORAM ACESOS!");
-  }
-}*/
+void distance(){
+  unsigned int distance = sonar.ping_cm(); // Measure distance in centimeters
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  delay(1500);
+}
+
+void ledON(){
+  digitalWrite(LED_PIN, HIGH);
+  delay(10000);
+  digitalWrite(LED_PIN, LOW);
+}
 
 void presence(){
   
@@ -116,15 +112,15 @@ void presence(){
   do {
     Serial.println("PRESENCE DETECTED!");
     Serial.println(pirstate);
-    digitalWrite(ledPIR, HIGH);  
+    digitalWrite(LED_PIN, HIGH);  
     if(value == 1){
-      digitalWrite(ledPIR, HIGH);
+      digitalWrite(LED_PIN, HIGH);
     }else{
-      digitalWrite(ledPIR, LOW);
+      digitalWrite(LED_PIN, LOW);
     }
     delay(3000);
   } while (pirdata == 0);
-  digitalWrite(ledPIR, LOW);
+  digitalWrite(LED_PIN, LOW);
   Serial.println("NO PRESENCE");
   delay(3000);
     
